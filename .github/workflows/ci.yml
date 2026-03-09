@@ -2,12 +2,15 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, test ]
   pull_request:
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
+
+    env:
+      SPRING_PROFILES_ACTIVE: test
 
     steps:
       - name: Checkout code
@@ -20,7 +23,7 @@ jobs:
           java-version: '21'
 
       - name: Build project
-        run: mvn -B package
+        run: mvn -B clean package
 
       - name: Run tests
         run: mvn test

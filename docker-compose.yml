@@ -1,16 +1,9 @@
-version: "3"
+version: "3.8"
 
 services:
-
-  app:
-    build: .
-    ports:
-      - "8080:8080"
-    depends_on:
-      - db
-
   db:
     image: postgres:16
+    container_name: devopsdemo-db
     restart: always
     environment:
       POSTGRES_DB: devopsdb
@@ -18,3 +11,18 @@ services:
       POSTGRES_PASSWORD: devops
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: devopsdemo-app
+    depends_on:
+      - db
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
